@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
     private static final int SINGLE_PRICE = 0;
+    private static final String AUTHOR = "author";
+    private static final String TITLE = "title";
+    private static final String PRICE = "price";
     private final SpecificationProviderManager<Book> bookSpecificationProviderManager;
 
     @Override
@@ -19,25 +22,24 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
         Specification<Book> spec = Specification.where(null);
         if (searchParametersDto.authors() != null && searchParametersDto.authors().length > 0) {
             spec = spec.and(bookSpecificationProviderManager
-                    .getSpecificationProvider("author")
+                    .getSpecificationProvider(AUTHOR)
                     .getSpecification(searchParametersDto.authors()));
         }
         if (searchParametersDto.titles() != null && searchParametersDto.titles().length > 0) {
             spec = spec.and(bookSpecificationProviderManager
-                    .getSpecificationProvider("title")
+                    .getSpecificationProvider(TITLE)
                     .getSpecification(searchParametersDto.titles()));
         }
-        if (searchParametersDto.priceRanges() != null
-                && searchParametersDto.priceRanges().length > 0) {
+        if (searchParametersDto.priceRanges() != null) {
             for (String priceRange : searchParametersDto.priceRanges()) {
                 String[] prices = priceRange.split("-");
                 if (prices.length == 1) {
                     spec = spec.and(bookSpecificationProviderManager
-                            .getSpecificationProvider("price")
+                            .getSpecificationProvider(PRICE)
                             .getSpecification(new String[]{prices[SINGLE_PRICE]}));
                 } else if (prices.length == 2) {
                     spec = spec.and(bookSpecificationProviderManager
-                            .getSpecificationProvider("price")
+                            .getSpecificationProvider(PRICE)
                             .getSpecification(prices));
                 }
             }

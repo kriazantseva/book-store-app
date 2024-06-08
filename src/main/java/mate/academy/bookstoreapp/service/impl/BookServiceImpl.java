@@ -4,11 +4,14 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mate.academy.bookstoreapp.dto.BookDto;
+import mate.academy.bookstoreapp.dto.BookSearchParametersDto;
 import mate.academy.bookstoreapp.dto.CreateBookRequestDto;
 import mate.academy.bookstoreapp.mapper.BookMapper;
 import mate.academy.bookstoreapp.model.Book;
-import mate.academy.bookstoreapp.repository.BookRepository;
+import mate.academy.bookstoreapp.repository.book.BookRepository;
+import mate.academy.bookstoreapp.repository.book.BookSpecificationBuilder;
 import mate.academy.bookstoreapp.service.BookService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
@@ -33,6 +37,12 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> findAll() {
         return bookMapper.toDtoList(bookRepository.findAll());
+    }
+
+    @Override
+    public List<BookDto> search(BookSearchParametersDto searchParametersDto) {
+        Specification<Book> bookSpecification = bookSpecificationBuilder.build(searchParametersDto);
+        return bookMapper.toDtoList(bookRepository.findAll(bookSpecification));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package mate.academy.bookstoreapp.dto;
+package mate.academy.bookstoreapp.dto.book;
 
 import java.math.BigDecimal;
 

@@ -24,10 +24,6 @@ public class UserServiceImpl implements UserService {
                     + "The email is already existed.");
         }
 
-        if (!requestDto.password().equals(requestDto.repeatPassword())) {
-            throw new RegistrationException("Passwords do not match.");
-        }
-
         User user = new User();
         user.setEmail(requestDto.email());
         user.setPassword(requestDto.password());

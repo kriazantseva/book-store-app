@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,22 +38,28 @@ public class CustomGlobalExceptionHandler {
     public ResponseEntity<Object> handleEntityNotFound(
             EntityNotFoundException ex
     ) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put(TIMESTAMP, LocalDateTime.now());
-        body.put(STATUS, HttpStatus.NOT_FOUND);
-        body.put(ERRORS, ex.getMessage());
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return setBody(HttpStatus.NOT_FOUND, ex);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Object> handleNoSuchElementException(
+            NoSuchElementException ex
+    ) {
+        return setBody(HttpStatus.NOT_FOUND, ex);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFound(
+            UsernameNotFoundException ex
+    ) {
+        return setBody(HttpStatus.NOT_FOUND, ex);
     }
 
     @ExceptionHandler(RegistrationException.class)
     public ResponseEntity<Object> handleRegistrationException(
             RegistrationException ex
     ) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put(TIMESTAMP, LocalDateTime.now());
-        body.put(STATUS, HttpStatus.CONFLICT);
-        body.put(ERRORS, ex.getMessage());
-        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+        return setBody(HttpStatus.CONFLICT, ex);
     }
 
     private String getErrorMessage(ObjectError error) {
@@ -61,5 +69,13 @@ public class CustomGlobalExceptionHandler {
             return fieldName + ": " + errorMessage;
         }
         return error.getDefaultMessage();
+    }
+
+    private ResponseEntity<Object> setBody(HttpStatus status, Exception ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(STATUS, status);
+        body.put(ERRORS, ex.getMessage());
+        return new ResponseEntity<>(body, status);
     }
 }

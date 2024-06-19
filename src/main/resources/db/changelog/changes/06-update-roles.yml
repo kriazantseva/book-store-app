@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-roles
+      author: root
+      changes:
+        - update:
+            tableName: roles
+            columns:
+              - column:
+                  name: role
+                  value: ROLE_USER
+            where: role = 'USER'
+        - update:
+            tableName: roles
+            columns:
+              - column:
+                  name: role
+                  value: ROLE_ADMIN
+            where: role = 'ADMIN'

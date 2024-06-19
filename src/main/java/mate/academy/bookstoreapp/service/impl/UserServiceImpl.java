@@ -36,19 +36,11 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.password()));
-        if (requestDto.email().contains("@admin")) {
-            setRolesToUser(user, Role.RoleName.ADMIN);
-        } else {
-            setRolesToUser(user, Role.RoleName.USER);
-        }
-        return userMapper.toUserResponseDto(userRepository.save(user));
-    }
-
-    private void setRolesToUser(User user, Role.RoleName roleName) {
-        Role role = roleRepository.findByRole(roleName).orElseThrow(() ->
-                new NoSuchElementException("Role " + roleName + " not found"));
+        Role role = roleRepository.findByRole(Role.RoleName.ROLE_USER).orElseThrow(() ->
+                new NoSuchElementException("Role " + Role.RoleName.ROLE_USER + " not found"));
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);
+        return userMapper.toUserResponseDto(userRepository.save(user));
     }
 }

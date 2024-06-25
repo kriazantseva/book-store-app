@@ -8,7 +8,7 @@ import mate.academy.bookstoreapp.dto.book.CreateBookRequestDto;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    BookDto save(CreateBookRequestDto requestDto, String categoryName);
+    BookDto save(CreateBookRequestDto requestDto);
 
     BookDto findById(Long id);
 

@@ -1,9 +1,7 @@
 package mate.academy.bookstoreapp.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mate.academy.bookstoreapp.dto.book.BookDto;
 import mate.academy.bookstoreapp.dto.book.BookDtoWithoutCategoryIds;
@@ -30,12 +28,8 @@ public class BookServiceImpl implements BookService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public BookDto save(CreateBookRequestDto requestDto, String categoryName) {
+    public BookDto save(CreateBookRequestDto requestDto) {
         Book book = bookMapper.toModel(requestDto);
-        Category approvedCategory = findCategoryByName(categoryName);
-        Set<Category> categories = new HashSet<>();
-        categories.add(approvedCategory);
-        book.setCategories(categories);
         return bookMapper.toDto(bookRepository.save(book));
     }
 

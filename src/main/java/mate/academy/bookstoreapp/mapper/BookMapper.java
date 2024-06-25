@@ -1,6 +1,7 @@
 package mate.academy.bookstoreapp.mapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import mate.academy.bookstoreapp.config.MapperConfig;
@@ -9,7 +10,9 @@ import mate.academy.bookstoreapp.dto.book.BookDtoWithoutCategoryIds;
 import mate.academy.bookstoreapp.dto.book.CreateBookRequestDto;
 import mate.academy.bookstoreapp.model.Book;
 import mate.academy.bookstoreapp.model.Category;
+import mate.academy.bookstoreapp.repository.category.CategoryRepository;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -29,12 +32,22 @@ public interface BookMapper {
 
     void updateBookFromDto(CreateBookRequestDto requestDto, @MappingTarget Book entity);
 
+    default Set<Category> mapCategoryIdsToCategories(List<Long> categoryIds,
+                                                     CategoryRepository categoryRepository) {
+        return categoryIds.stream()
+                .map(categoryRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+    }
+
     @AfterMapping
-    default void setCategoryIds(@MappingTarget BookDto bookDto, Book book) {
-        if (book.getCategories() != null) {
-            Set<Long> categoryIds = book.getCategories().stream()
-                    .map(Category::getId)
-                    .collect(Collectors.toSet());
+    default void mapCategoryIds(@MappingTarget Book book, CreateBookRequestDto requestDto,
+                                @Context CategoryRepository categoryRepository) {
+        if (requestDto.categoryIds() != null) {
+            book.setCategories(mapCategoryIdsToCategories(
+                    requestDto.categoryIds(), categoryRepository
+            ));
         }
     }
 }

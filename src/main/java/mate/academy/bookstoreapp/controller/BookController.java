@@ -74,4 +74,20 @@ public class BookController {
     public void delete(@PathVariable Long id) {
         bookService.deleteById(id);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Add category", description = "Add category to book")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{id}/add-category")
+    public void addCategoryToBook(@PathVariable Long id, @RequestBody String categoryName) {
+        bookService.addCategoryToBookById(id, categoryName);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Remove category", description = "Remove category from book")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}/remove-category")
+    public void removeCategoryFromBook(@PathVariable Long id, @RequestBody String categoryName) {
+        bookService.removeCategoryFromBookById(id, categoryName);
+    }
 }

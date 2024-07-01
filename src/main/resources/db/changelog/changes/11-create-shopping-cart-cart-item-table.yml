@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-shopping-cart-cart-item-table
+      author: root
+      changes:
+        - createTable:
+            tableName: shopping_carts_cart_items
+            columns:
+              - column:
+                  name: shopping_cart_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cart_item_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: shopping_carts_cart_items
+            baseColumnNames: shopping_cart_id
+            referencedTableName: shopping_carts
+            referencedColumnNames: id
+            constraintName: fk_shopping_carts_cart_items_shopping_cart
+        - addForeignKeyConstraint:
+            baseTableName: shopping_carts_cart_items
+            baseColumnNames: cart_item_id
+            referencedTableName: cart_items
+            referencedColumnNames: id
+            constraintName: fk_shopping_carts_cart_items_cart_item

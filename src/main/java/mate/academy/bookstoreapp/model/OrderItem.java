@@ -9,27 +9,30 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "cart_items")
+@Table(name = "order_items")
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
-public class CartItem {
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JoinColumn(name = "shopping_cart_id", nullable = false)
+    @JoinColumn(name = "order_id", nullable = false)
     @ManyToOne
-    private ShoppingCart shoppingCart;
+    private Order order;
     @JoinColumn(name = "book_id", nullable = false)
     @OneToOne
     private Book book;
     @Column(nullable = false)
     private int quantity;
+    @Column(nullable = false)
+    private BigDecimal price;
 }

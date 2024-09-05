@@ -10,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -21,36 +20,29 @@ import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "orders")
 @Getter
 @Setter
-@ToString(exclude = "orderItems")
 @EqualsAndHashCode(exclude = {"orderItems", "status"})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.PENDING;
     @Column(nullable = false)
     private BigDecimal total;
-    @Column(name = "order_date", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime orderDate = LocalDateTime.now();
-    @Column(name = "shipping_address", nullable = false)
+    @Column(nullable = false)
     private String shippingAddress;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @JoinTable(
-            name = "orders_order_items",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "order_item_id")
-    )
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
     public enum Status {

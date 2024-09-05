@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mate.academy.bookstoreapp.dto.cartitem.CreateCartItemRequestDto;
-import mate.academy.bookstoreapp.dto.order.CreateOrderRequestDto;
 import mate.academy.bookstoreapp.dto.shoppingcart.ShoppingCartDto;
 import mate.academy.bookstoreapp.model.User;
 import mate.academy.bookstoreapp.service.ShoppingCartService;
@@ -72,16 +71,5 @@ public class ShoppingCartController {
     public void cleanCart(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         shoppingCartService.clearCart(user.getId());
-    }
-
-    @Operation(summary = "Make an order", description = "Transform cart to order")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/order")
-    public void makeOrder(
-            Authentication authentication,
-            @RequestBody @Valid CreateOrderRequestDto requestDto
-    ) {
-        User user = (User) authentication.getPrincipal();
-        shoppingCartService.transformCartToOrder(user.getId(), requestDto);
     }
 }

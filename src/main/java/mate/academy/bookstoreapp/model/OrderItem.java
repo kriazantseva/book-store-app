@@ -2,6 +2,7 @@ package mate.academy.bookstoreapp.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,7 +27,7 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @JoinColumn(name = "order_id", nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Order order;
     @JoinColumn(name = "book_id", nullable = false)
     @OneToOne

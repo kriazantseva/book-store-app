@@ -1,5 +1,6 @@
 package mate.academy.bookstoreapp.mapper;
 
+import java.util.List;
 import mate.academy.bookstoreapp.config.MapperConfig;
 import mate.academy.bookstoreapp.dto.order.CreateOrderRequestDto;
 import mate.academy.bookstoreapp.dto.order.OrderDto;
@@ -15,6 +16,8 @@ public interface OrderMapper {
     OrderDto toDto(Order order);
 
     Order toEntity(CreateOrderRequestDto requestDto);
+
+    List<OrderDto> toDtoList(List<Order> orders);
 
     void updateOrderFromDto(UpdateOrderStatusDto requestDto, @MappingTarget Order order);
 }

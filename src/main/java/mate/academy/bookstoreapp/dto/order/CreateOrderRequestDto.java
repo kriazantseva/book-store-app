@@ -1,8 +1,8 @@
 package mate.academy.bookstoreapp.dto.order;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 
 public record CreateOrderRequestDto(
-        @NotEmpty String shippingAddress
+        @NotBlank String shippingAddress
 ) {
 }

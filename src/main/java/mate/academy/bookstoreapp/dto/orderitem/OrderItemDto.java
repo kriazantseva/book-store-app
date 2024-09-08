@@ -1,12 +1,13 @@
-package mate.academy.bookstoreapp.dto.cartitem;
+package mate.academy.bookstoreapp.dto.orderitem;
 
 import java.math.BigDecimal;
 
-public record CartItemDto(
+public record OrderItemDto(
         Long id,
         Long bookId,
         String bookTitle,
         BigDecimal bookPrice,
-        int quantity
+        int quantity,
+        BigDecimal price
 ) {
 }

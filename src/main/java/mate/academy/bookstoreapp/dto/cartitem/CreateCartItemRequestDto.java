@@ -7,6 +7,6 @@ import jakarta.validation.constraints.Positive;
 
 public record CreateCartItemRequestDto(
         @NotNull @Positive(message = "The book id can't be negative") Long bookId,
-        @NotNull @Positive @Min(1) @Max(100) int quantity
+        @Min(1) @Max(100) int quantity
 ) {
 }

@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import mate.academy.bookstoreapp.dto.book.BookDtoWithoutCategoryIds;
 import mate.academy.bookstoreapp.dto.category.CategoryDto;
 import mate.academy.bookstoreapp.dto.category.CreateCategoryRequestDto;
+import mate.academy.bookstoreapp.utils.StarterCategory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -105,8 +106,8 @@ class CategoryControllerTest {
 
         assertNotNull(category);
         assertEquals(validId, category.id());
-        assertEquals("Detective", category.name());
-        assertEquals("Detective description", category.description());
+        assertEquals(StarterCategory.NAME, category.name());
+        assertEquals(StarterCategory.DESCRIPTION, category.description());
     }
 
     @Sql(scripts = "classpath:databasescripts/books/add-books-and-categories"
@@ -135,7 +136,7 @@ class CategoryControllerTest {
         assertNotNull(categories);
         assertFalse(categories.isEmpty());
         assertEquals(1, categories.size());
-        assertEquals("Detective", categories.get(0).name());
+        assertEquals(StarterCategory.NAME, categories.get(0).name());
     }
 
     @Sql(scripts = "classpath:databasescripts/books/add-books-and-categories"

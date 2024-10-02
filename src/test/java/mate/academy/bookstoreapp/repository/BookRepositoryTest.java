@@ -1,10 +1,11 @@
 package mate.academy.bookstoreapp.repository;
 
-import java.math.BigDecimal;
 import java.util.Set;
 import mate.academy.bookstoreapp.model.Book;
 import mate.academy.bookstoreapp.model.Category;
 import mate.academy.bookstoreapp.repository.book.BookRepository;
+import mate.academy.bookstoreapp.utils.StarterBook;
+import mate.academy.bookstoreapp.utils.StarterCategory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,16 +31,16 @@ public class BookRepositoryTest {
     void findById_BookWithCategory_ReturnsBook() {
         Category category = new Category();
         category.setId(1L);
-        category.setName("Detective");
+        category.setName(StarterCategory.NAME);
 
         Set<Category> categories = Set.of(category);
 
         Book expectedBook = new Book();
         expectedBook.setId(1L);
-        expectedBook.setTitle("Sherlock Holmes");
-        expectedBook.setAuthor("Arthur Conan Doyle");
-        expectedBook.setIsbn("000-1-00-111111-0");
-        expectedBook.setPrice(BigDecimal.valueOf(10.99));
+        expectedBook.setTitle(StarterBook.TITLE);
+        expectedBook.setAuthor(StarterBook.AUTHOR);
+        expectedBook.setIsbn(StarterBook.ISBN);
+        expectedBook.setPrice(StarterBook.PRICE);
         expectedBook.setCategories(categories);
 
         Book actualBook = bookRepository.findById(1L).get();

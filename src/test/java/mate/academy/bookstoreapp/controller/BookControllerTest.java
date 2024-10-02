@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import mate.academy.bookstoreapp.dto.book.BookDto;
 import mate.academy.bookstoreapp.dto.book.BookSearchParametersDto;
 import mate.academy.bookstoreapp.dto.book.CreateBookRequestDto;
+import mate.academy.bookstoreapp.utils.StarterBook;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BookControllerTest {
+    /*I use logger in tests in study purpose and to see the income
+    * It's not a mistake, this practice can leave
+    * Also in case the logs are not overload tests results*/
     private static final Logger LOGGER = Logger.getLogger(BookControllerTest.class.getSimpleName());
     private static MockMvc mockMvc;
     @Autowired
@@ -75,7 +79,7 @@ public class BookControllerTest {
         assertNotNull(books);
         assertFalse(books.isEmpty());
         assertEquals(1, books.size());
-        assertEquals("Sherlock Holmes", books.get(0).title());
+        assertEquals(StarterBook.TITLE, books.get(0).title());
     }
 
     @Sql(scripts = "classpath:databasescripts/books/add-books-and-categories"
@@ -102,8 +106,8 @@ public class BookControllerTest {
 
         assertNotNull(book);
         assertEquals(validId, book.id());
-        assertEquals("Sherlock Holmes", book.title());
-        assertEquals("Arthur Conan Doyle", book.author());
+        assertEquals(StarterBook.TITLE, book.title());
+        assertEquals(StarterBook.AUTHOR, book.author());
     }
 
     @Sql(scripts = "classpath:databasescripts/books/add-books-and-categories"
@@ -150,15 +154,7 @@ public class BookControllerTest {
     @DisplayName("Create book - Admin User")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void createBook_AdminUser_ReturnsCreatedBook() throws Exception {
-        CreateBookRequestDto requestDto = new CreateBookRequestDto(
-                "Another Adventures",
-                "Another Author",
-                "978-3-16-148410-0",
-                BigDecimal.valueOf(19.99),
-                "It's absolutely another story",
-                "cover.jpeg",
-                List.of(1L)
-        );
+        CreateBookRequestDto requestDto = createNewBookRequestDto();
 
         String requestJson = objectMapper.writeValueAsString(requestDto);
 
@@ -183,15 +179,7 @@ public class BookControllerTest {
     @DisplayName("Create book - Non-Admin User")
     @WithMockUser(username = "user", roles = {"USER"})
     public void createBook_NonAdminUser_ReturnsForbidden() throws Exception {
-        CreateBookRequestDto requestDto = new CreateBookRequestDto(
-                "Another Adventures",
-                "Another Author",
-                "978-3-16-148410-0",
-                BigDecimal.valueOf(19.99),
-                "It's absolutely another story",
-                "cover.jpeg",
-                List.of(1L)
-        );
+        CreateBookRequestDto requestDto = createNewBookRequestDto();
 
         String requestJson = objectMapper.writeValueAsString(requestDto);
 
@@ -294,5 +282,17 @@ public class BookControllerTest {
                         .content(categoryName))
                 .andExpect(status().isNoContent())
                 .andReturn();
+    }
+
+    private CreateBookRequestDto createNewBookRequestDto() {
+        return new CreateBookRequestDto(
+                "Another Adventures",
+                "Another Author",
+                "978-3-16-148410-0",
+                BigDecimal.valueOf(19.99),
+                "It's absolutely another story",
+                "cover.jpeg",
+                List.of(1L)
+        );
     }
 }

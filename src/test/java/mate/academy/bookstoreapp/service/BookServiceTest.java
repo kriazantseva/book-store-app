@@ -28,6 +28,8 @@ import mate.academy.bookstoreapp.model.Category;
 import mate.academy.bookstoreapp.repository.book.BookRepository;
 import mate.academy.bookstoreapp.repository.category.CategoryRepository;
 import mate.academy.bookstoreapp.service.impl.BookServiceImpl;
+import mate.academy.bookstoreapp.utils.StarterBook;
+import mate.academy.bookstoreapp.utils.StarterCategory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -61,28 +63,20 @@ public class BookServiceTest {
 
     @BeforeEach
     public void setUpBookDto() {
-        String title = "Sherlock Holmes";
-        String author = "Arthur Conan Doyle";
-        String isbn = "000-1-00-111111-0";
-        BigDecimal price = BigDecimal.valueOf(10.99);
-        String description = "Adventures of Sherlock Holmes";
-        String coverImage = "cover.jpeg";
-        List<Long> categoryIds = List.of(1L);
-
         bookRequestDto = new CreateBookRequestDto(
-                title,
-                author,
-                isbn,
-                price,
-                description,
-                coverImage,
-                categoryIds
+                StarterBook.TITLE,
+                StarterBook.AUTHOR,
+                StarterBook.ISBN,
+                StarterBook.PRICE,
+                StarterBook.DESCRIPTION,
+                StarterBook.COVER_IMAGE,
+                StarterBook.CATEGORY_IDS
         );
 
         category = new Category();
         category.setId(1L);
-        category.setName("Detective");
-        category.setDescription("Detective description");
+        category.setName(StarterCategory.NAME);
+        category.setDescription(StarterCategory.DESCRIPTION);
 
         List<Category> categories = List.of(category);
 
@@ -167,15 +161,7 @@ public class BookServiceTest {
     @DisplayName("Get all books - with pagination")
     @Test
     public void findAll_returns_ListOfBookDto() {
-        Book book2 = new Book();
-        book2.setId(2L);
-        book2.setTitle("Book");
-        book2.setAuthor("Author");
-        book2.setIsbn("000-1-00-111111-1");
-        book2.setPrice(BigDecimal.valueOf(10.99));
-        book2.setDescription("Book description");
-        book2.setCoverImage("cover.jpeg");
-        book2.setCategories(Set.of(category));
+        Book book2 = createSecondBook();
 
         BookDto bookDto2 = new BookDto(
                 book2.getId(),
@@ -333,15 +319,7 @@ public class BookServiceTest {
     @DisplayName("Find all books - With Category ID")
     @Test
     public void findAllBooks_withValid_categoryId_returns_ListBookDtoWithoutCategoryIds() {
-        Book book2 = new Book();
-        book2.setId(2L);
-        book2.setTitle("Book");
-        book2.setAuthor("Author");
-        book2.setIsbn("000-1-00-111111-1");
-        book2.setPrice(BigDecimal.valueOf(10.99));
-        book2.setDescription("Book description");
-        book2.setCoverImage("cover.jpeg");
-        book2.setCategories(Set.of(category));
+        Book book2 = createSecondBook();
 
         BookDtoWithoutCategoryIds bookDtoWithout = new BookDtoWithoutCategoryIds(
                 book.getId(),
@@ -386,14 +364,7 @@ public class BookServiceTest {
         category2.setName("Novel");
         category2.setDescription("Novel description");
 
-        Book book2 = new Book();
-        book2.setId(2L);
-        book2.setTitle("Book");
-        book2.setAuthor("Author");
-        book2.setIsbn("000-1-00-111111-1");
-        book2.setPrice(BigDecimal.valueOf(10.99));
-        book2.setDescription("Book description");
-        book2.setCoverImage("cover.jpeg");
+        Book book2 = createSecondBook();
         book2.setCategories(new HashSet<>());
 
         Long bookId = 2L;
@@ -440,5 +411,18 @@ public class BookServiceTest {
 
         Book updatedBook = actual.get(0);
         assertFalse(updatedBook.getCategories().contains(category));
+    }
+
+    private Book createSecondBook() {
+        Book book2 = new Book();
+        book2.setId(2L);
+        book2.setTitle("Book");
+        book2.setAuthor("Author");
+        book2.setIsbn("000-1-00-111111-1");
+        book2.setPrice(BigDecimal.valueOf(10.99));
+        book2.setDescription("Book description");
+        book2.setCoverImage("cover.jpeg");
+        book2.setCategories(Set.of(category));
+        return book2;
     }
 }

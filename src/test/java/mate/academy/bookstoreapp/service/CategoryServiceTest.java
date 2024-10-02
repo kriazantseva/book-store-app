@@ -19,6 +19,7 @@ import mate.academy.bookstoreapp.mapper.CategoryMapper;
 import mate.academy.bookstoreapp.model.Category;
 import mate.academy.bookstoreapp.repository.category.CategoryRepository;
 import mate.academy.bookstoreapp.service.impl.CategoryServiceImpl;
+import mate.academy.bookstoreapp.utils.StarterCategory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,15 +51,15 @@ public class CategoryServiceTest {
 
     @BeforeEach
     public void setUpCategoryDto() {
-        String name = "Detective";
-        String description = "'I will find you' description";
-
-        requestDto = new CreateCategoryRequestDto(name, description);
+        requestDto = new CreateCategoryRequestDto(
+                StarterCategory.NAME,
+                StarterCategory.DESCRIPTION
+        );
 
         category = new Category();
         category.setId(1L);
-        category.setName(name);
-        category.setDescription(description);
+        category.setName(StarterCategory.NAME);
+        category.setDescription(StarterCategory.DESCRIPTION);
 
         categoryDto = new CategoryDto(
                 category.getId(),
@@ -196,8 +197,8 @@ public class CategoryServiceTest {
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         doNothing().when(categoryRepository).deleteById(categoryId);
-        categoryService.deleteById(categoryId);
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
+        categoryService.deleteById(categoryId);
 
         assertEquals(Optional.empty(), categoryRepository.findById(categoryId));
 

@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import mate.academy.bookstoreapp.dto.category.CategoryDto;
 import mate.academy.bookstoreapp.dto.category.CreateCategoryRequestDto;
 import mate.academy.bookstoreapp.mapper.CategoryMapper;
@@ -35,9 +34,6 @@ import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceTest {
-    private static final Logger LOGGER = Logger.getLogger(
-            CategoryServiceTest.class.getSimpleName());
-
     @Mock
     private CategoryRepository categoryRepository;
     @Mock
@@ -84,7 +80,6 @@ public class CategoryServiceTest {
 
         CategoryDto expected = categoryDto;
         CategoryDto actual = categoryService.save(requestDto);
-        LOGGER.info(actual.toString());
 
         assertEquals(expected, actual);
 
@@ -116,9 +111,7 @@ public class CategoryServiceTest {
                 .thenReturn(List.of(categoryDto, categoryDto2));
 
         List<CategoryDto> expected = List.of(categoryDto, categoryDto2);
-        List<CategoryDto> actual = categoryService.findAll(pageable).stream()
-                .peek(s -> LOGGER.info("Category: " + s.toString()))
-                .toList();
+        List<CategoryDto> actual = categoryService.findAll(pageable);
 
         assertNotNull(actual);
         assertEquals(2, actual.size());
@@ -134,7 +127,6 @@ public class CategoryServiceTest {
 
         CategoryDto expected = categoryDto;
         CategoryDto actual = categoryService.getById(categoryId);
-        LOGGER.info(actual.toString());
 
         assertNotNull(actual);
         assertEquals(expected, actual);
@@ -179,7 +171,6 @@ public class CategoryServiceTest {
         when(categoryMapper.toDto(category)).thenReturn(updatedDto);
 
         CategoryDto result = categoryService.update(categoryId, newRequestDto);
-        LOGGER.info("Updated CategoryDto: " + result);
 
         assertEquals(updatedDto, result);
         assertEquals("Drama", result.name());

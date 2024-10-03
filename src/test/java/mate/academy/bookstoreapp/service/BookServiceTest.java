@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 import mate.academy.bookstoreapp.dto.book.BookDto;
 import mate.academy.bookstoreapp.dto.book.BookDtoWithoutCategoryIds;
 import mate.academy.bookstoreapp.dto.book.CreateBookRequestDto;
@@ -45,8 +44,6 @@ import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
-    private static final Logger LOGGER = Logger.getLogger(BookServiceTest.class.getName());
-
     @Mock
     private BookRepository bookRepository;
     @Mock
@@ -133,7 +130,6 @@ public class BookServiceTest {
         when(bookMapper.toDto(book)).thenReturn(bookDto);
 
         BookDto result = bookService.findById(bookId);
-        LOGGER.info(result.toString());
 
         assertNotNull(result);
         assertEquals(bookDto, result);
@@ -244,13 +240,7 @@ public class BookServiceTest {
         when(bookRepository.findAll(pageableMiddle50)).thenReturn(bookPage2);
         when(bookMapper.toDtoList(bookPage2.getContent())).thenReturn(middle50BookDtos);
         List<BookDto> expectedMiddle50 = middle50BookDtos;
-        List<BookDto> actualMiddle50 = bookService.findAll(pageableMiddle50).stream()
-                .peek(s -> {
-                    LOGGER.info(s.toString());
-                    if (s.categoryIds() != null) {
-                        s.categoryIds().forEach(c -> LOGGER.info("Category Ids: " + c));
-                    }
-                }).toList();
+        List<BookDto> actualMiddle50 = bookService.findAll(pageableMiddle50);
 
         assertEquals(expectedFirst10, actualFirst10);
         assertEquals(10, actualMiddle50.size());
@@ -289,8 +279,6 @@ public class BookServiceTest {
         when(bookMapper.toDto(book)).thenReturn(updatedBookDto);
 
         BookDto result = bookService.update(bookId, updateBookDto);
-
-        LOGGER.info(result.toString());
 
         assertNotNull(result);
         assertEquals(updatedBookDto, result);
@@ -347,9 +335,7 @@ public class BookServiceTest {
                 .thenReturn(List.of(bookDtoWithout, bookDtoWithout2));
 
         List<BookDtoWithoutCategoryIds> expected = List.of(bookDtoWithout, bookDtoWithout2);
-        List<BookDtoWithoutCategoryIds> actual = bookService.findAllByCategoryId(categoryId)
-                .stream()
-                .peek(s -> LOGGER.info(s.toString())).toList();
+        List<BookDtoWithoutCategoryIds> actual = bookService.findAllByCategoryId(categoryId);
 
         assertNotNull(actual);
         assertEquals(2, actual.size());
@@ -375,12 +361,7 @@ public class BookServiceTest {
         when(bookRepository.findAll()).thenReturn(List.of(book, book2));
 
         bookService.addCategoryToBookById(bookId, categoryName);
-        List<Book> actual = bookRepository.findAll().stream().peek(s -> {
-            LOGGER.info(s.toString());
-            if (s.getCategories() != null) {
-                s.getCategories().forEach(c -> LOGGER.info("Category : " + c.getName()));
-            }
-        }).toList();
+        List<Book> actual = bookRepository.findAll();
 
         assertNotNull(actual);
         assertEquals(2, actual.size());
@@ -400,12 +381,7 @@ public class BookServiceTest {
         when(bookRepository.findAll()).thenReturn(List.of(book));
 
         bookService.removeCategoryFromBookById(bookId, categoryName);
-        List<Book> actual = bookRepository.findAll().stream().peek(s -> {
-            LOGGER.info(s.toString());
-            if (s.getCategories() != null) {
-                s.getCategories().forEach(c -> LOGGER.info("Category : " + c.getName()));
-            }
-        }).toList();
+        List<Book> actual = bookRepository.findAll();
 
         assertNotNull(actual);
 

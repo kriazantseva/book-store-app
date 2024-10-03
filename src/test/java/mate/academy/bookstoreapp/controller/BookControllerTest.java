@@ -15,7 +15,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.logging.Logger;
 import mate.academy.bookstoreapp.dto.book.BookDto;
 import mate.academy.bookstoreapp.dto.book.BookSearchParametersDto;
 import mate.academy.bookstoreapp.dto.book.CreateBookRequestDto;
@@ -35,10 +34,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BookControllerTest {
-    /*I use logger in tests in study purpose and to see the income
-    * It's not a mistake, this practice can leave
-    * Also in case the logs are not overload tests results*/
-    private static final Logger LOGGER = Logger.getLogger(BookControllerTest.class.getSimpleName());
     private static MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
@@ -71,7 +66,6 @@ public class BookControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
 
         List<BookDto> books = objectMapper.readValue(content,
                 new TypeReference<List<BookDto>>() {});
@@ -100,7 +94,6 @@ public class BookControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
 
         BookDto book = objectMapper.readValue(content, BookDto.class);
 
@@ -135,7 +128,6 @@ public class BookControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
 
         List<BookDto> books = objectMapper.readValue(content, new TypeReference<>() {});
 
@@ -165,7 +157,6 @@ public class BookControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
         BookDto createdBook = objectMapper.readValue(content, BookDto.class);
 
         assertNotNull(createdBook);
@@ -219,7 +210,6 @@ public class BookControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
         BookDto updatedBook = objectMapper.readValue(content, BookDto.class);
 
         assertNotNull(updatedBook);

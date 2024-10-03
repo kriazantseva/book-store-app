@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import java.util.logging.Logger;
 import mate.academy.bookstoreapp.dto.book.BookDtoWithoutCategoryIds;
 import mate.academy.bookstoreapp.dto.category.CategoryDto;
 import mate.academy.bookstoreapp.dto.category.CreateCategoryRequestDto;
@@ -33,8 +32,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CategoryControllerTest {
-    private static final Logger LOGGER = Logger.getLogger(
-            CategoryControllerTest.class.getSimpleName());
     private static MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
@@ -74,7 +71,6 @@ class CategoryControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
         CategoryDto createdCategory = objectMapper.readValue(content, CategoryDto.class);
 
         assertNotNull(createdCategory);
@@ -100,7 +96,6 @@ class CategoryControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
 
         CategoryDto category = objectMapper.readValue(content, CategoryDto.class);
 
@@ -128,7 +123,6 @@ class CategoryControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
 
         List<CategoryDto> categories = objectMapper.readValue(content,
                 new TypeReference<List<CategoryDto>>() {});
@@ -163,7 +157,6 @@ class CategoryControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
         CategoryDto updatedCategory = objectMapper.readValue(content, CategoryDto.class);
 
         assertNotNull(updatedCategory);
@@ -203,7 +196,6 @@ class CategoryControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        LOGGER.info("Response content: " + content);
 
         List<BookDtoWithoutCategoryIds> books = objectMapper.readValue(content,
                 new TypeReference<List<BookDtoWithoutCategoryIds>>() {});
